@@ -40,6 +40,14 @@ def fitness(genes, matrix):
         fit += matrix[genes[i]][genes[i + 1]]
     return 1000000/fit
 
+"""
+def fitness(genes, matrix):
+    fit = 0
+    for i in range(len(genes)-1):
+        fit += matrix[genes[i]][genes[i + 1]]
+    fit += matrix[genes[-1]][genes[0]]
+    return 1000000/fit
+"""
 
 # TURNIEJ
 def tournament(cities_counter, genes, n, leng):
@@ -97,12 +105,12 @@ def add_to_map_list(chosen_pair, map_lists):
     print("map list", map_lists, "\n")
     return map_lists
 
-def connect_sublists(sub1, sub2):
+def connect_sublists(sub1, sub2):           # sprawdzić czy działa
     for i in (1, sub2):
         sub1.append(sub2[i])
     return sub1
 
-def merge_map_sublists(map_lists):
+def merge_map_sublists(map_lists):          #do poprawy
     array = 0
     for verse in range(len(map_lists)-1):
         for verse2 in range(verse+1, len(map_lists)-1):
