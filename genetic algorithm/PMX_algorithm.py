@@ -20,21 +20,19 @@ def add_to_map_list(chosen_pair, map_lists):
     return map_lists
 
 def connect_sublists(sub1, sub2):
-        temp = sub2[1:]
-        return sub1 + temp
+        return sub1 + sub2[1:]
 
 def merge_map_sublists(map_lists):
     len_map_list = len(map_lists)   # length od map list will change thats why we use while loop
     verse = 0
     while verse < len_map_list-1:
         verse2 = verse+1
-        while verse2 < len_map_list:
+        while (verse != verse2) and (verse2 < len_map_list):
             if map_lists[verse][-1] == map_lists[verse2][0]:
                 array = connect_sublists(map_lists[verse], map_lists[verse2])
                 map_lists.pop(verse)
                 map_lists.pop(verse2 - 1)
                 map_lists.append(array)
-                verse -= 1
                 verse2 -= 1
                 len_map_list -= 1
             elif map_lists[verse][0] == map_lists[verse2][-1]:
@@ -42,36 +40,73 @@ def merge_map_sublists(map_lists):
                 map_lists.pop(verse)
                 map_lists.pop(verse2 - 1)
                 map_lists.append(array)     #you cant print map_list[verse] because in position verse there is another thing
-                verse -= 1
                 verse2 -= 1
                 len_map_list -= 1
             verse2 += 1
         verse += 1
     return map_lists
 
+def search_in_list(tab, elem):
+    for i in range(len(tab)):
+        if elem == tab[i]:
+            return i
+    return -1
 
-def PMX_algoritm_resolver(genes):
-    genom1 = genes[0][2]    #first genom
-    genom2 = genes[1][2]    #second genom to reform
+def fix_numbers_in_two_genotypes(gen1, gen2, map_list, start, end):
+    #fix all numbers that are repetitive in genotypes
+    for verse in map_list:
+        gen1_before_start = search_in_list(gen1[:start], verse[0])
+        gen1_after_end = search_in_list(gen1[end + 1:], verse[0])
 
-    pos_start = min(random.randint(0, len(genom1) - 1), random.randint(0, len(genom1) - 1))
-    pos_end = max(random.randint(0, len(genom2) - 1), random.randint(0, len(genom2) - 1))
+        gen2_before_start = search_in_list(gen2[:start], verse[-1])
+        gen2_after_end = search_in_list(gen2[end + 1:], verse[-1])
+
+        if gen1_before_start != -1:
+            gen1[gen1_before_start] = verse[-1]
+
+        if gen1_after_end != -1:
+            update_this_element = search_in_list(gen1[end + 1:], verse[0]) + end + 1
+            gen1[update_this_element] = verse[-1]
+
+        if gen2_before_start != -1:
+            gen2[gen2_before_start] = verse[0]
+
+        if gen2_after_end != -1:
+            update_this_element = search_in_list(gen2[end + 1:], verse[-1]) + end + 1
+            gen2[update_this_element] = verse[0]
+    return [gen1, gen2]
+
+def PMX_algoritm_resolver(genotypes):
+    genotype1 = genotypes[0][2]    #first genom
+    genotype2 = genotypes[1][2]    #second genom
+
+    # choose position to swap
+    #print("before swap\n", genotype1, "\n", genotype2)
+    pos_start   = random.randint(1, len(genotype1) - 1)
+    pos_end     = random.randint(1, len(genotype2) - 1)
     if pos_start > pos_end:
         pos_start, pos_end = pos_end, pos_start
 
+    #swap genotypes and start preparing for map list
     start_pairs = []
     for i in range(pos_start, pos_end+1):
-        genom1[i], genom2[i] = genom2[i], genom1[i]
-        if genom1[i] != genom2[i]:
-            start_pairs.append([genom1[i], genom2[i]])
+        genotype1[i], genotype2[i] = genotype2[i], genotype1[i]
+        if genotype1[i] != genotype2[i]:
+            start_pairs.append([genotype1[i], genotype2[i]])
 
-    print("\n", genom1, "\n", genom2, "\n", pos_start, pos_end)
-    #print("start_pairs", start_pairs)
+    # create map list
+    #print(pos_start, pos_end, "\nafter swap\n", genotype1, "\n", genotype2)
     map_lists = [[]]
     if len(start_pairs) > 0:
-        map_lists = [start_pairs.pop()]     #add first pair if there is any pair
-
+        # add first pair to map list if there is any pair to add
+        map_lists = [start_pairs.pop()]
+        # add pairs to map list with special logic
         while len(start_pairs) > 0:
             map_lists = add_to_map_list(start_pairs.pop(), map_lists)
         map_lists = merge_map_sublists(map_lists)
-    return map_lists
+        #print("map list\n", map_lists)
+
+        #fix repetitive numbers to non repetitive
+        genotype1, genotype2 = (fix_numbers_in_two_genotypes(genotype1, genotype2, map_lists, pos_start, pos_end))
+        #print("after fix repetitive numbers\n", genotype1, "\n", genotype2)
+    return [genotype1, genotype2]
