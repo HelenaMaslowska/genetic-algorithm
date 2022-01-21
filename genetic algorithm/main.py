@@ -4,23 +4,9 @@ import PMX_algorithm
 import tournaments
 import brute_force
 
-def form(per):
-    form = []
-    mini = min(per)
-    ind = per.index(mini)
-    for i in range(ind, len(per)):
-        form.append(per[i])
-    for i in range(ind):
-        form.append(per[i])
-    return form
 
-
-def good(per, permutations):
-    pers = []
-    for i in permutations.values():
-        pers.append(form(i))
-    per = form(per)
-    if per in pers or per.reverse() in pers:
+def good(per, pers):
+    if per in pers or per.copy().reverse() in pers:
         return False
     return True
 
@@ -28,8 +14,12 @@ def good(per, permutations):
 # PERMUTACJA LISTY LICZB OD 0 DO RAN, BEZ POWTÓRZEŃ W PERS
 def permutation(ran, pers):
     while True:
-        per = random.sample(range(ran), ran)
+        per = [0]
+        samp = random.sample(range(1, ran), ran - 1)
+        for i in samp:
+            per.append(i)
         if good(per, pers):
+            pers.append(per)
             return per
 
 
@@ -76,9 +66,9 @@ x_y_city = generate_x_y_city(cities_count, mini, maxi)
 matrix = get_distances([[0 for _ in range(cities_count)] for _ in range(cities_count)])
 
 # ----------- testowanie brute force ---------------
-best_genes = brute_force.brute_force(matrix)
-best_fitness = fitness(best_genes, matrix)
-print("najlepszy genom: ", best_genes, best_fitness)
+#best_genes = brute_force.brute_force(matrix)
+#best_fitness = fitness(best_genes, matrix)
+#print("najlepszy genom: ", best_genes, best_fitness)
 # --------------------------------------------------
 
 # CREATE NEW POPULATION - PATHS OF ALL THE CITIES
@@ -87,7 +77,14 @@ n = 8
 warriors_distances = []     # distances of genotypes    #-----PRZEROBIC SLOWNIK NA LISTE W CALYM PROGRAMIE
 
 #-----PRZEROBIC SLOWNIK NA LISTE W CALYM PROGRAMIE
-warriors = [random.sample(range(cities_count), cities_count) for i in range(n)] # genotypes
+#'''
+warriors = []
+for _ in range(n):
+    permutation(cities_count, warriors)
+#'''
+
+#warriors = [random.sample(range(cities_count), cities_count) for i in range(n)] # genotypes
+print("warriors: ", warriors)
 
 for i in range(n):
     warriors_distances.append(fitness(warriors[i], matrix))
