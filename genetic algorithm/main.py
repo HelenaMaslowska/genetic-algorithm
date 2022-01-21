@@ -67,7 +67,7 @@ def get_distances(matrix):
 
 
 # GENERATE POINTS ON THE CARTESIAN PLANE
-cities_count = 5                   # how many cities
+cities_count = 6                   # how many cities
 mini = 100
 maxi = 100 * cities_count
 x_y_city = generate_x_y_city(cities_count, mini, maxi)
@@ -77,8 +77,8 @@ matrix = get_distances([[0 for _ in range(cities_count)] for _ in range(cities_c
 
 # ----------- testowanie brute force ---------------
 best_genes = brute_force.brute_force(matrix)
-print("najlepszy genom: ", best_genes)
-print("wartość jego funkcji przystosowania: ", fitness(best_genes, matrix))
+best_fitness = fitness(best_genes, matrix)
+print("najlepszy genom: ", best_genes, best_fitness)
 # --------------------------------------------------
 
 # CREATE NEW POPULATION - PATHS OF ALL THE CITIES
@@ -95,11 +95,15 @@ for i in range(n):
 # TURNIEJ chyba szuka najmniejszego
 #print(tournaments.tournament(cities_count, warriors, 2, 3))
 winners = tournaments.tournament2(warriors_distances, warriors)
-print(winners[0][1])
-print(winners[1][1])
+#print(winners[0][1])
+#print(winners[1][1])
 # TOURNAMENT 2 SEARCH THE SHORTEST PATHS
 old_max = 0
-for _ in range(1000):
+
+
+new_max = 0
+for _ in range(5):
+#while new_max < 0.6 * best_fitness:
     winners = tournaments.tournament2(warriors_distances, warriors)
     genotype1, genotype2 = PMX_algorithm.PMX_algoritm_resolver(winners)
     fitness1 = fitness(genotype1, matrix)
@@ -111,9 +115,13 @@ for _ in range(1000):
     else:
         #print(fitness2)
         warriors.append(genotype2)
-    warriors_distances.append(fitness(warriors[n], matrix))
-    n += 1
 
-    if old_max < max(warriors_distances):
-        old_max = max(warriors_distances)
+    warriors_distances.append(fitness(warriors[n], matrix))
+    print(len(warriors), warriors)
+    print(len(warriors_distances), warriors_distances)
+    n += 1
+    new_max = max(warriors_distances)
+    if old_max < new_max:
+        old_max = new_max
         print("gotcha", old_max)
+        print(warriors[warriors_distances.index(old_max)])
