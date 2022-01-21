@@ -2,7 +2,8 @@ import random
 import math
 import PMX_algorithm
 import tournaments
-from itertools import permutations
+import brute_force
+
 def form(per):
     form = []
     mini = min(per)
@@ -66,13 +67,19 @@ def get_distances(matrix):
 
 
 # GENERATE POINTS ON THE CARTESIAN PLANE
-cities_count = 2000                      # how many cities
+cities_count = 5                   # how many cities
 mini = 100
 maxi = 100 * cities_count
 x_y_city = generate_x_y_city(cities_count, mini, maxi)
 
 # CREATE DISTANCES MATRIX
 matrix = get_distances([[0 for _ in range(cities_count)] for _ in range(cities_count)])
+
+# ----------- testowanie brute force ---------------
+best_genes = brute_force.brute_force(matrix)
+print("najlepszy genom: ", best_genes)
+print("wartość jego funkcji przystosowania: ", fitness(best_genes, matrix))
+# --------------------------------------------------
 
 # CREATE NEW POPULATION - PATHS OF ALL THE CITIES
 n = 8
@@ -110,4 +117,3 @@ for _ in range(1000):
     if old_max < max(warriors_distances):
         old_max = max(warriors_distances)
         print("gotcha", old_max)
-
