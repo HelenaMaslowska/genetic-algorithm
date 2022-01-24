@@ -21,6 +21,7 @@ def tournament(cities_counter, genes, n, leng):
 # zwraca 2 wektory o największej wartości [index genotypu, funkcja przystosowania, ścieżka]
 def tournament2(genes, genes_path):
     #wersja 2 algorytmu
+    #length = len(genes_path) ---------- można obliczyć raz i zastąpić
     cp_genes_path = genes_path
     tab = [random.randint(0, 1) for _ in range(len(genes_path))]
     while not (len(genes_path) // 3 < sum(tab) < len(genes_path) //3 * 2):

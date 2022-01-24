@@ -6,7 +6,7 @@ import brute_force
 
 
 def good(per, pers):
-    if per in pers or per.copy().reverse() in pers:
+    if per in pers:
         return False
     return True
 
@@ -113,6 +113,7 @@ for _ in range(5):
         #print(fitness2)
         warriors.append(genotype2)
 
+    # trzeba będzie za każdą iteracją tworzyć nową populację a nie tylko dodawać kolejnego osobnika
     warriors_distances.append(fitness(warriors[n], matrix))
     print(len(warriors), warriors)
     print(len(warriors_distances), warriors_distances)

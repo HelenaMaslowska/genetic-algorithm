@@ -77,8 +77,8 @@ def fix_numbers_in_two_genotypes(gen1, gen2, map_list, start, end):
     return [gen1, gen2]
 
 def PMX_algoritm_resolver(genotypes):
-    genotype1 = genotypes[0][2]    #first genom
-    genotype2 = genotypes[1][2]    #second genom
+    genotype1 = genotypes[0][2]    #first genome
+    genotype2 = genotypes[1][2]    #second genome
 
     # choose position to swap
     #print("before swap\n", genotype1, "\n", genotype2)
@@ -86,6 +86,13 @@ def PMX_algoritm_resolver(genotypes):
     pos_end     = random.randint(1, len(genotype2) - 1)
     if pos_start > pos_end:
         pos_start, pos_end = pos_end, pos_start
+    ''' 
+    ^ a co jeśli tutaj się wylosuje ten sam początek i koniec?
+    l = len(genotype1)
+    pos_start = random.randint(0, l - 2)
+    pos_end = random.randint(b + 1, l - 1)
+    można dać coś takiego, to nigdy nie będzie równe, chyba że to nie jest problem
+    '''
 
     #swap genotypes and start preparing for map list
     start_pairs = []
