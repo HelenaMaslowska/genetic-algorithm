@@ -97,23 +97,37 @@ winners = tournaments.tournament2(warriors_distances, warriors)
 # TOURNAMENT 2 SEARCH THE SHORTEST PATHS
 old_max = 0
 
+## Może będziemy generować instancje wokół najpierw stworzonego rozwiązania? Nie trzeba będzie szukać brute forcem,
+# ale trochę trudniejsze do napisania.
 
 new_max = 0
-for _ in range(5):
+for _ in range(15):
 #while new_max < 0.6 * best_fitness:
+    # trzeba będzie za każdą iteracją tworzyć nową populację a nie tylko dodawać kolejnego osobnika
     winners = tournaments.tournament2(warriors_distances, warriors)
+    # turniej powinnyśmy powtarzać tyle razy, ile ma wynosić nasza populacja i powinien on za każdym razem losować sobie
+    #  część populacji z której potem wybiera najlepszych, czyli rodziców.
+
+    # można zrobić tak, żeby funkcja turnament od razu zwracała nam listę par rodziców o zadanej długości (liczności populacji)
+    # i potem przekazujemy to np do funkcji breed() (którą napiszemy), która za pomocą PMX tworzy z tych par nową populację
+
+    # potem dla każdej populacji będziemy szukać najlepszego genomu i porównywać go z warunkiem stopu
+
     genotype1, genotype2 = PMX_algorithm.PMX_algoritm_resolver(winners)
     fitness1 = fitness(genotype1, matrix)
     fitness2 = fitness(genotype2, matrix)
+    print("genotyp pierwszego: ", genotype1, "i jego przystosowanie: ", fitness1)
+    print("genotyp drugiego: ", genotype2, "i jego przystosowanie: ", fitness2)
     #print("po")
+
+    warriors = []
     if fitness1 > fitness2:
-        #print(fitness1)
+        print(fitness1)
         warriors.append(genotype1)
     else:
-        #print(fitness2)
+        print(fitness2)
         warriors.append(genotype2)
 
-    # trzeba będzie za każdą iteracją tworzyć nową populację a nie tylko dodawać kolejnego osobnika
     warriors_distances.append(fitness(warriors[n], matrix))
     print(len(warriors), warriors)
     print(len(warriors_distances), warriors_distances)
