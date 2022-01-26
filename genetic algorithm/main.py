@@ -47,8 +47,8 @@ def create_matrix(num_of_cities):
 # ------------------------------------------------------------------------------
 
 # STARTER PACK
-effectiveness = 0.7
-cities_count = 10
+effectiveness = 0.8
+cities_count = 11
 population_count = 8
 matrix = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
@@ -113,7 +113,7 @@ while new_max < effectiveness * best_fitness:
     if old_max < new_max:
         old_max = new_max
         #print("gotcha")
-        #print(new_max, chosen_gen)
+        print(new_max, chosen_gen)
 timer_end = datetime.now()
 print("==============================================")
 print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
