@@ -1,14 +1,11 @@
 import random
 
 # TURNIEJ
-def tournament(cities_counter, genes, n, leng):
-    # losuje polowe zbioru do jednej listy, reszta do drugiej, wybiera max z obu
-    # zwraca w postaci takiej jak tournament 2
-    # wersja 1 algorytmu
+def tournament(num_of_cities, genes, n, leng):
     winners = []
     while len(winners) < n:
         tmp = []
-        indices = random.sample(range(cities_counter), leng)
+        indices = random.sample(range(num_of_cities), leng)
         for i in indices:
             tmp.append(genes[i])
         maxi = max(tmp)
@@ -18,7 +15,7 @@ def tournament(cities_counter, genes, n, leng):
 
 
 # TURNIEJ 2
-# zwraca 2 wektory o największej wartości [index genotypu, funkcja przystosowania, ścieżka]
+# zwraca 2 wektory o największej wartości [index genu, funkcja przystosowania, ścieżka]
 def tournament2(genes, genes_path):
     #wersja 2 algorytmu
     #length = len(genes_path) ---------- można obliczyć raz i zastąpić
@@ -41,22 +38,31 @@ def tournament2(genes, genes_path):
     winners[1][0] = genes.index(max2)
     winners[1][1] = max2
     winners[1][2] = genes_path[genes.index(max2)]
-
-    """
-    cp_genes = genes
-    cp_genes_path = genes_path
-    while len(winners) < 2:
-        tab_values = list(cp_genes.values())
-        max_value = max(tab_values)
-        max_key = list(cp_genes.keys())[tab_values.index(max_value)]
-        max_path = list(cp_genes_path.values())[tab_values.index(max_value)]
-        max_gene = [max_key, max_value, max_path]
-        winners.append(max_gene)
-        cp_genes.pop(max_key)
-        cp_genes_path.pop(max_key)
-    """
     return winners
 
+def tournament3(population_fitness, population):
+    # losuje polowe zbioru do jednej listy, reszta do drugiej, wybiera max z obu
+    # zwraca w postaci takiej jak tournament 2
+    # wersja 3 algorytmu
+    # naprawić błąd - po wielu iteracjach znacznie
+    random_i_list = random.sample(population_fitness, len(population)//2)
+    reverso_random_i_list = [x for x in population_fitness if x not in random_i_list]
+    max1 = max(random_i_list)
 
-# TURNIEJ 3 wybiera połowę populacji i wybiera z niego max
-# def tournament3()
+
+    max2 = population_fitness[0]
+    i=0
+    if reverso_random_i_list:
+        max2 = max(reverso_random_i_list)
+    else:
+        while i < len(population_fitness) and population_fitness[i] == max1:
+            max2 = population_fitness[i]
+            i += 1
+            # w tym miejscu jest po czasie coraz czesciej, najpewniej przez to że wartości zaczynają się powtarzać
+
+
+    id = population_fitness.index(max1)
+    reverso_id = population_fitness.index(max2)
+
+    return [    [id,            max1, population[id]            ],
+                [reverso_id,    max2, population[reverso_id]    ]   ]

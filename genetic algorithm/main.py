@@ -3,25 +3,18 @@ import math
 import PMX_algorithm
 import tournaments
 import brute_force
-
-
-def good(per, pers):
-    if per in pers:
-        return False
-    return True
-
-
-# PERMUTACJA LISTY LICZB OD 0 DO RAN, BEZ POWTÓRZEŃ W PERS
-def permutation(ran, pers):
-    while True:
-        per = [0]
-        samp = random.sample(range(1, ran), ran - 1)
-        for i in samp:
-            per.append(i)
-        if good(per, pers):
-            pers.append(per)
-            return per
-
+import mutations
+from datetime import datetime
+# PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
+def permutation(population_count, num_of_cities):
+    m = 0
+    warrior_s = []
+    while m < population_count:
+        per = [0] + random.sample(range(1, num_of_cities), num_of_cities - 1)
+        if not (per in warrior_s):
+            warrior_s.append(per)
+            m += 1
+    return warrior_s
 
 # FUNKCJA PRZYSTOSOWANIA
 def fitness(genes, matrix):
@@ -31,80 +24,57 @@ def fitness(genes, matrix):
     fit += matrix[genes[-1]][genes[0]]
     return 10000000/fit
 
-#CREATE CITIES
-def generate_x_y_city(cities_count, mini, maxi):
+def create_matrix(num_of_cities):
+    mini = 100
+    maxi = 100 * cities_count
     x_y_city = []
-    while len(x_y_city) < cities_count:
+    new_matrix = [[0 for _ in range(cities_count)] for _ in range(cities_count)]
+    while len(x_y_city) < num_of_cities:
         x = random.randint(mini, maxi)
         y = random.randint(mini, maxi)
         if [x, y] not in x_y_city:
             x_y_city.append([x, y])
-    return x_y_city
 
-#GET DISTANCES FROM CITY TO CITY
-def get_distances(matrix):
     for i in range(cities_count):
         for j in range(cities_count):
             if j > i:
                 x_dimension = x_y_city[i][0] - x_y_city[j][0]
                 y_dimension = x_y_city[i][1] - x_y_city[j][1]
-                matrix[i][j] = round(math.sqrt(pow(x_dimension, 2) + pow(y_dimension, 2)))
-    return matrix
+                new_matrix[i][j] = round(math.sqrt(pow(x_dimension, 2) + pow(y_dimension, 2)))
+    return new_matrix
 
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
-
-### --------------------------------------- dane wejściowe do zadania --------------------------------------- ####
-
-
-# GENERATE POINTS ON THE CARTESIAN PLANE
-cities_count = 6                   # how many cities
-mini = 100
-maxi = 100 * cities_count
-x_y_city = generate_x_y_city(cities_count, mini, maxi)
-
-# CREATE DISTANCES MATRIX
-matrix = get_distances([[0 for _ in range(cities_count)] for _ in range(cities_count)])
+# STARTER PACK
+effectiveness = 0.7
+cities_count = 10
+population_count = 8
+matrix = create_matrix(cities_count)
+population = permutation(population_count, cities_count)
+population_fitness = [fitness(population[i], matrix) for i in range(population_count)]             # distances of genotypes
+old_max = 0
+new_max = 0
+winners = tournaments.tournament2(population_fitness, population)
 
 # ----------- testowanie brute force ---------------
-#best_genes = brute_force.brute_force(matrix)
-#best_fitness = fitness(best_genes, matrix)
-#print("najlepszy genom: ", best_genes, best_fitness)
+best_genes = brute_force.brute_force(matrix)
+best_fitness = fitness(best_genes, matrix)
+print("best: ", best_genes, best_fitness)
 # --------------------------------------------------
-
-# CREATE NEW POPULATION - PATHS OF ALL THE CITIES
-n = 8
-
-warriors_distances = []     # distances of genotypes    #-----PRZEROBIC SLOWNIK NA LISTE W CALYM PROGRAMIE
-
-#-----PRZEROBIC SLOWNIK NA LISTE W CALYM PROGRAMIE
-#'''
-warriors = []
-for _ in range(n):
-    permutation(cities_count, warriors)
-#'''
-
-#warriors = [random.sample(range(cities_count), cities_count) for i in range(n)] # genotypes
-print("warriors: ", warriors)
-
-for i in range(n):
-    warriors_distances.append(fitness(warriors[i], matrix))
-
-# TURNIEJ chyba szuka najmniejszego
-#print(tournaments.tournament(cities_count, warriors, 2, 3))
-winners = tournaments.tournament2(warriors_distances, warriors)
-#print(winners[0][1])
-#print(winners[1][1])
-# TOURNAMENT 2 SEARCH THE SHORTEST PATHS
-old_max = 0
 
 ## Może będziemy generować instancje wokół najpierw stworzonego rozwiązania? Nie trzeba będzie szukać brute forcem,
 # ale trochę trudniejsze do napisania.
 
-new_max = 0
-for _ in range(15):
-#while new_max < 0.6 * best_fitness:
+#for _ in range(40):
+timer_start = datetime.now()
+while new_max < effectiveness * best_fitness:
+
     # trzeba będzie za każdą iteracją tworzyć nową populację a nie tylko dodawać kolejnego osobnika
-    winners = tournaments.tournament2(warriors_distances, warriors)
+    #tournaments.tournament3(population_fitness, population)
+
+    winners = tournaments.tournament3(population_fitness, population)
+    #podaje tych samych winnersow po czasie
     # turniej powinnyśmy powtarzać tyle razy, ile ma wynosić nasza populacja i powinien on za każdym razem losować sobie
     #  część populacji z której potem wybiera najlepszych, czyli rodziców.
 
@@ -113,27 +83,41 @@ for _ in range(15):
 
     # potem dla każdej populacji będziemy szukać najlepszego genomu i porównywać go z warunkiem stopu
 
-    genotype1, genotype2 = PMX_algorithm.PMX_algoritm_resolver(winners)
+    [genotype1, genotype2] = PMX_algorithm.PMX_algoritm_resolver(winners)
     fitness1 = fitness(genotype1, matrix)
     fitness2 = fitness(genotype2, matrix)
-    print("genotyp pierwszego: ", genotype1, "i jego przystosowanie: ", fitness1)
-    print("genotyp drugiego: ", genotype2, "i jego przystosowanie: ", fitness2)
-    #print("po")
-
-    warriors = []
+    chosen_gen = 0
     if fitness1 > fitness2:
-        print(fitness1)
-        warriors.append(genotype1)
+        #print(fitness1)
+        chosen_gen = genotype1
     else:
-        print(fitness2)
-        warriors.append(genotype2)
+        #print(fitness2)
+        chosen_gen = genotype2
+    # population_fitness.append(fitness(population[population_count], matrix))
 
-    warriors_distances.append(fitness(warriors[n], matrix))
-    print(len(warriors), warriors)
-    print(len(warriors_distances), warriors_distances)
-    n += 1
-    new_max = max(warriors_distances)
+    random_choser = random.randint(0, 100)
+    if random_choser <= 3:
+        chosen_gen = mutations.mutation(chosen_gen)
+    if 3 < random_choser <= 5:
+        chosen_gen = mutations.mutation_seq(chosen_gen)
+    if 5 < random_choser <= 7:
+        chosen_gen = mutations.random_mutation(cities_count)
+
+    if chosen_gen not in population:
+        the_lowest_index = population_fitness.index(min(population_fitness))
+        population[the_lowest_index] = chosen_gen
+        population_fitness[the_lowest_index] = fitness(population[the_lowest_index], matrix)
+
+    #population_count += 1
+    new_max = max(population_fitness)
     if old_max < new_max:
         old_max = new_max
-        print("gotcha", old_max)
-        print(warriors[warriors_distances.index(old_max)])
+        #print("gotcha")
+        #print(new_max, chosen_gen)
+timer_end = datetime.now()
+print("==============================================")
+print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
+print("best fitness:", old_max)
+print("best route:", chosen_gen)
+print("time:", timer_end.second-timer_start.second)
+print("==============================================")

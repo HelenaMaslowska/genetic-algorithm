@@ -1,5 +1,5 @@
 import random
-
+"""
 def add_to_map_list(chosen_pair, map_lists):
     for verse in range(len(map_lists)):
         if [chosen_pair[1], chosen_pair[0]] == map_lists[verse]:
@@ -75,32 +75,24 @@ def fix_numbers_in_two_genotypes(gen1, gen2, map_list, start, end):
             update_this_element = search_in_list(gen2[end + 1:], verse[-1]) + end + 1
             gen2[update_this_element] = verse[0]
     return [gen1, gen2]
-
+"""
 def PMX_algoritm_resolver(genotypes):
-    genotype1 = genotypes[0][2]    #first genome
-    genotype2 = genotypes[1][2]    #second genome
+    genotype1 = genotypes[0][2]
+    genotype2 = genotypes[1][2]
 
     # choose position to swap
-    #print("before swap\n", genotype1, "\n", genotype2)
-    pos_start   = random.randint(1, len(genotype1) - 1)
-    pos_end     = random.randint(1, len(genotype2) - 1)
+    pos_start = random.randint(1, len(genotype1) - 2)
+    pos_end = random.randint(1, len(genotype2) - 1)
+    while pos_end == pos_start:
+        pos_end = random.randint(1, len(genotype2) - 1)
     if pos_start > pos_end:
         pos_start, pos_end = pos_end, pos_start
-    ''' 
-    ^ a co jeśli tutaj się wylosuje ten sam początek i koniec?
-    l = len(genotype1)
-    pos_start = random.randint(0, l - 2)
-    pos_end = random.randint(b + 1, l - 1)
-    można dać coś takiego, to nigdy nie będzie równe, chyba że to nie jest problem
-    '''
 
-    #swap genotypes and start preparing for map list
+    #swap genotypes
     start_pairs = []
-    for i in range(pos_start, pos_end+1):
-        genotype1[i], genotype2[i] = genotype2[i], genotype1[i]
-        if genotype1[i] != genotype2[i]:
-            start_pairs.append([genotype1[i], genotype2[i]])
-
+    new_genotype1 = genotype1[:pos_start] + genotype2[pos_start:pos_end] + genotype1[pos_end:]
+    new_genotype2 = genotype2[:pos_start] + genotype1[pos_start:pos_end] + genotype2[pos_end:]
+    """
     # create map list
     #print(pos_start, pos_end, "\nafter swap\n", genotype1, "\n", genotype2)
     map_lists = [[]]
@@ -116,4 +108,16 @@ def PMX_algoritm_resolver(genotypes):
         #fix repetitive numbers to non repetitive
         genotype1, genotype2 = (fix_numbers_in_two_genotypes(genotype1, genotype2, map_lists, pos_start, pos_end))
         #print("after fix repetitive numbers\n", genotype1, "\n", genotype2)
-    return [genotype1, genotype2]
+    """
+    for x in range(len(genotype1)):
+
+        if x in range(pos_start, pos_end):
+            continue
+
+        while new_genotype1[x] in new_genotype1[pos_start:pos_end]:
+            new_genotype1[x] = new_genotype2[new_genotype1.index(new_genotype1[x], pos_start, pos_end)]
+
+        while new_genotype2[x] in new_genotype2[pos_start:pos_end]:
+            new_genotype2[x] = new_genotype1[new_genotype2.index(new_genotype2[x], pos_start, pos_end)]
+
+    return [new_genotype1, new_genotype2]
