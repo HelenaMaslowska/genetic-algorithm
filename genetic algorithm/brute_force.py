@@ -11,6 +11,7 @@ def brute_force(matrix):
         test = 0
         for i in range(len(new) - 1):
             test += matrix[new[i]][new[i + 1]]
+        test += matrix[new[-1]][new[0]]
         if mini == 0 or test < mini:
             mini = test
             mini_genes = new

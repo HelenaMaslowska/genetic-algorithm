@@ -3,8 +3,11 @@ import math
 import PMX_algorithm
 import tournaments
 import brute_force
+import greedy
 import mutations
 from datetime import datetime
+
+
 # PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
 def permutation(population_count, num_of_cities):
     m = 0
@@ -40,7 +43,7 @@ def create_matrix(num_of_cities):
             if j > i:
                 x_dimension = x_y_city[i][0] - x_y_city[j][0]
                 y_dimension = x_y_city[i][1] - x_y_city[j][1]
-                new_matrix[i][j] = round(math.sqrt(pow(x_dimension, 2) + pow(y_dimension, 2)))
+                new_matrix[j][i] = new_matrix[i][j] = round(math.sqrt(pow(x_dimension, 2) + pow(y_dimension, 2)))
     return new_matrix
 
 # ------------------------------------------------------------------------------
@@ -48,7 +51,7 @@ def create_matrix(num_of_cities):
 
 # STARTER PACK
 effectiveness = 0.8
-cities_count = 11
+cities_count = 9
 population_count = 8
 matrix = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
@@ -57,10 +60,19 @@ old_max = 0
 new_max = 0
 winners = tournaments.tournament2(population_fitness, population)
 
-# ----------- testowanie brute force ---------------
-best_genes = brute_force.brute_force(matrix)
-best_fitness = fitness(best_genes, matrix)
+# ----------- testowanie brute force i greedy ---------------
+for i in range(100):
+    matrix = create_matrix(cities_count)
+    best_genes = brute_force.brute_force(matrix)
+    best_fitness = fitness(best_genes, matrix)
+    good_genes = greedy.greedy_alg(matrix)
+    good_fitness = fitness(good_genes, matrix)
+    if good_fitness > best_fitness:
+        print("-----------------BŁĄD!------------------")
+        print("best: ", best_genes, best_fitness)
+        print("good: ", good_genes, good_fitness)
 print("best: ", best_genes, best_fitness)
+print("good: ", good_genes, good_fitness)
 # --------------------------------------------------
 
 ## Może będziemy generować instancje wokół najpierw stworzonego rozwiązania? Nie trzeba będzie szukać brute forcem,
