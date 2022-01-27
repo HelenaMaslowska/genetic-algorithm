@@ -7,6 +7,7 @@ import greedy
 import mutations
 import time
 import plot
+import draw_route
 
 
 # PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
@@ -43,22 +44,24 @@ def create_matrix(num_of_cities):
         if [x, y] not in x_y_city:
             x_y_city.append([x, y])
 
+
     for i in range(cities_count):
         for j in range(cities_count):
             if j > i:
                 x_dimension = x_y_city[i][0] - x_y_city[j][0]
                 y_dimension = x_y_city[i][1] - x_y_city[j][1]
                 new_matrix[j][i] = new_matrix[i][j] = round(math.sqrt(pow(x_dimension, 2) + pow(y_dimension, 2)))
-    return new_matrix
+
+    return new_matrix, x_y_city, maxi
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
 # STARTER PACK
 effectiveness = 0.8
-cities_count = 100
-population_count = 10
-matrix = create_matrix(cities_count)
+cities_count = 50
+population_count = 15
+matrix, cities_coordinates, dim = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
 population_fitness = [fitness(population[i], matrix) for i in range(population_count)]             # distances of genotypes
 old_max = 0
@@ -127,10 +130,13 @@ while new_max < effectiveness * best_fitness:
 
 timer_end = time.time()
 
-plot.plot(iterations)
+#plot.plot(iterations)
 print("==============================================")
 print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
 print("best fitness:", old_max)
 print("best route:", chosen_gen)
 print("time:", timer_end - timer_start)
 print("==============================================")
+
+draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
+draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")

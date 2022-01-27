@@ -19,9 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="998c99e7-af82-4fb0-a134-05e821b0f45a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="998c99e7-af82-4fb0-a134-05e821b0f45a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +55,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -65,7 +64,28 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="draw_route" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="genetic algorithm" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/draw_route.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="genetic algorithm" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -87,8 +107,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.draw_route" />
+      </list>
+    </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -112,24 +137,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1433" height="257" key="GridCell.Tab.0.bottom" timestamp="1643297548580">
-      <screen x="82" y="0" width="1454" height="864" />
-    </state>
-    <state width="1433" height="257" key="GridCell.Tab.0.bottom/2002.0.1454.864/82.0.1454.864@82.0.1454.864" timestamp="1643297548580" />
-    <state width="1433" height="257" key="GridCell.Tab.0.center" timestamp="1643297548580">
-      <screen x="82" y="0" width="1454" height="864" />
-    </state>
-    <state width="1433" height="257" key="GridCell.Tab.0.center/2002.0.1454.864/82.0.1454.864@82.0.1454.864" timestamp="1643297548580" />
-    <state width="1433" height="257" key="GridCell.Tab.0.left" timestamp="1643297548580">
-      <screen x="82" y="0" width="1454" height="864" />
-    </state>
-    <state width="1433" height="257" key="GridCell.Tab.0.left/2002.0.1454.864/82.0.1454.864@82.0.1454.864" timestamp="1643297548580" />
-    <state width="1433" height="257" key="GridCell.Tab.0.right" timestamp="1643297548580">
-      <screen x="82" y="0" width="1454" height="864" />
-    </state>
-    <state width="1433" height="257" key="GridCell.Tab.0.right/2002.0.1454.864/82.0.1454.864@82.0.1454.864" timestamp="1643297548580" />
   </component>
 </project>
