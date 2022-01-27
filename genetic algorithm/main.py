@@ -5,7 +5,8 @@ import tournaments
 import brute_force
 import greedy
 import mutations
-from datetime import datetime
+import time
+import plot
 
 
 # PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
@@ -20,11 +21,15 @@ def permutation(population_count, num_of_cities):
     return warrior_s
 
 # FUNKCJA PRZYSTOSOWANIA
-def fitness(genes, matrix):
+def distance(genes, matrix):
     fit = 0
-    for i in range(len(genes)-1):
+    for i in range(len(genes) - 1):
         fit += matrix[genes[i]][genes[i + 1]]
     fit += matrix[genes[-1]][genes[0]]
+    return fit
+
+def fitness(genes, matrix):
+    fit = distance(genes, matrix)
     return 10000000/fit
 
 def create_matrix(num_of_cities):
@@ -51,17 +56,22 @@ def create_matrix(num_of_cities):
 
 # STARTER PACK
 effectiveness = 0.8
-cities_count = 9
-population_count = 8
+cities_count = 100
+population_count = 10
 matrix = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
 population_fitness = [fitness(population[i], matrix) for i in range(population_count)]             # distances of genotypes
 old_max = 0
 new_max = 0
 winners = tournaments.tournament2(population_fitness, population)
+#best_genes = brute_force.brute_force(matrix)
+#best_fitness = fitness(best_genes, matrix)
+best_genes = greedy.greedy_alg(matrix)
+best_fitness = fitness(best_genes, matrix)
+iterations = []
 
 # ----------- testowanie brute force i greedy ---------------
-for i in range(100):
+'''for i in range(100):
     matrix = create_matrix(cities_count)
     best_genes = brute_force.brute_force(matrix)
     best_fitness = fitness(best_genes, matrix)
@@ -72,28 +82,15 @@ for i in range(100):
         print("best: ", best_genes, best_fitness)
         print("good: ", good_genes, good_fitness)
 print("best: ", best_genes, best_fitness)
-print("good: ", good_genes, good_fitness)
+print("good: ", good_genes, good_fitness)'''
 # --------------------------------------------------
 
-## Może będziemy generować instancje wokół najpierw stworzonego rozwiązania? Nie trzeba będzie szukać brute forcem,
-# ale trochę trudniejsze do napisania.
-
 #for _ in range(40):
-timer_start = datetime.now()
+timer_start = time.time()
 while new_max < effectiveness * best_fitness:
-
-    # trzeba będzie za każdą iteracją tworzyć nową populację a nie tylko dodawać kolejnego osobnika
-    #tournaments.tournament3(population_fitness, population)
 
     winners = tournaments.tournament3(population_fitness, population)
     #podaje tych samych winnersow po czasie
-    # turniej powinnyśmy powtarzać tyle razy, ile ma wynosić nasza populacja i powinien on za każdym razem losować sobie
-    #  część populacji z której potem wybiera najlepszych, czyli rodziców.
-
-    # można zrobić tak, żeby funkcja turnament od razu zwracała nam listę par rodziców o zadanej długości (liczności populacji)
-    # i potem przekazujemy to np do funkcji breed() (którą napiszemy), która za pomocą PMX tworzy z tych par nową populację
-
-    # potem dla każdej populacji będziemy szukać najlepszego genomu i porównywać go z warunkiem stopu
 
     [genotype1, genotype2] = PMX_algorithm.PMX_algoritm_resolver(winners)
     fitness1 = fitness(genotype1, matrix)
@@ -126,10 +123,14 @@ while new_max < effectiveness * best_fitness:
         old_max = new_max
         #print("gotcha")
         print(new_max, chosen_gen)
-timer_end = datetime.now()
+        iterations.append(distance(chosen_gen, matrix))
+
+timer_end = time.time()
+
+plot.plot(iterations)
 print("==============================================")
 print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
 print("best fitness:", old_max)
 print("best route:", chosen_gen)
-print("time:", timer_end.second-timer_start.second)
+print("time:", timer_end - timer_start)
 print("==============================================")
