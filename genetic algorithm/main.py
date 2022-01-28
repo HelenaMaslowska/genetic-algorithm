@@ -16,7 +16,7 @@ def plot(Y):
     plt.ylabel('Długość trasy')
     plt.show()
 
-# PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
+# PERMUTACJA BEZ POWTÓRZEŃ W WARRIORS
 def permutation(population_count, num_of_cities):
     m = 0
     warrior_s = []
@@ -64,14 +64,14 @@ def create_matrix(num_of_cities):
 # ------------------------------------------------------------------------------
 
 # STARTER PACK
-effectiveness = 0.8
+effectiveness = 0.9
 cities_count = 100
-population_count = 16
+population_count = 8
 matrix, cities_coordinates, dim = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
-population_fitness = [fitness(population[i], matrix) for i in range(population_count)]             # distances of genotypes
-old_max = 0
-new_max = 0
+population_fitness = [fitness(population[i], matrix) for i in range(population_count)]
+old_max: float = 0.0
+new_max: float = 0.0
 winners = tournaments.tournament2(population_fitness, population)
 #best_genes = brute_force.brute_force(matrix)
 #best_fitness = fitness(best_genes, matrix)
@@ -79,7 +79,11 @@ best_genes = greedy.greedy_alg(matrix)
 best_fitness = fitness(best_genes, matrix)
 iterations = []
 
-# ----------- testowanie brute force i greedy ---------------
+chosen_gen = 0
+new_chosen = 0
+the_lowest_index = 0
+print("Loading...")
+# --------- testowanie brute force i greedy ---------
 '''for i in range(100):
     matrix = create_matrix(cities_count)
     best_genes = brute_force.brute_force(matrix)
@@ -87,7 +91,7 @@ iterations = []
     good_genes = greedy.greedy_alg(matrix)
     good_fitness = fitness(good_genes, matrix)
     if good_fitness > best_fitness:
-        print("-----------------BŁĄD!------------------")
+        print("--------------BŁĄD!---------------")
         print("best: ", best_genes, best_fitness)
         print("good: ", good_genes, good_fitness)
 print("best: ", best_genes, best_fitness)
@@ -96,43 +100,46 @@ print("good: ", good_genes, good_fitness)'''
 
 #for _ in range(40):
 timer_start = time.time()
-while new_max < effectiveness * best_fitness:
-
+temp_start_timer = time.time()
+while new_max <= effectiveness * best_fitness:
     winners = tournaments.tournament3(population_fitness, population)
-    #podaje tych samych winnersow po czasie
 
     [genotype1, genotype2] = PMX_algorithm.PMX_algoritm_resolver(winners)
     fitness1 = fitness(genotype1, matrix)
     fitness2 = fitness(genotype2, matrix)
-    chosen_gen = 0
+
     if fitness1 > fitness2:
-        #print(fitness1)
         chosen_gen = genotype1
     else:
-        #print(fitness2)
         chosen_gen = genotype2
-    # population_fitness.append(fitness(population[population_count], matrix))
 
     random_choser = random.randint(0, 100)
-    if random_choser <= 3:
-        chosen_gen = mutations.mutation(chosen_gen)
-    if 3 < random_choser <= 5:
+    #if random_choser <= 0:
+    #    chosen_gen = mutations.mutation(chosen_gen)
+
+    if 0 < random_choser <= 7:
         chosen_gen = mutations.mutation_seq(chosen_gen)
-    if 5 < random_choser <= 7:
-        chosen_gen = mutations.random_mutation(cities_count)
 
     if chosen_gen not in population:
         the_lowest_index = population_fitness.index(min(population_fitness))
         population[the_lowest_index] = chosen_gen
         population_fitness[the_lowest_index] = fitness(population[the_lowest_index], matrix)
 
-    #population_count += 1
+
+    the_lowest_index = population_fitness.index(min(population_fitness))
+    new_chosen = mutations.random_mutation(cities_count)
+    new_chosen_fitness = fitness(new_chosen, matrix)
+    if new_chosen not in population and new_chosen_fitness > population_fitness[the_lowest_index]:
+        population[the_lowest_index] = new_chosen
+        population_fitness[the_lowest_index] = new_chosen_fitness
+
     new_max = max(population_fitness)
     if old_max < new_max:
         old_max = new_max
-        #print("gotcha")
-        print(new_max, chosen_gen)
+        i = time.time()
+        #print(round(old_max/best_fitness*100, 4), "\t",round(i - temp_start_timer, 4), "\t", round(i - timer_start, 4))
         iterations.append(distance(chosen_gen, matrix))
+        #temp_start_timer = time.time()
 
 timer_end = time.time()
 
@@ -140,9 +147,10 @@ timer_end = time.time()
 print("==============================================")
 print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
 print("best fitness:", old_max)
+print("route length: ", distance(chosen_gen,matrix))
 print("best route:", chosen_gen)
 print("time:", timer_end - timer_start)
 print("==============================================")
 
-#draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
+draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
 #draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")

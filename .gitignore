@@ -68,7 +68,7 @@ venv.bak/
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
-*.__pycache__/
+*.__pycache__/**
 __pycache__/
 *.py[cod]
 *$py.class
