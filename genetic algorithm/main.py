@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import random
 import math
 import PMX_algorithm
@@ -6,9 +7,14 @@ import brute_force
 import greedy
 import mutations
 import time
-import plot
 import draw_route
 
+def plot(Y):
+    X = [x for x in range(len(Y))]
+    plt.plot(X, Y)
+    plt.xlabel('Kolejne iteracje')
+    plt.ylabel('Długość trasy')
+    plt.show()
 
 # PERMUTACJA LISTY LICZB OD 1 DO RAN, BEZ POWTÓRZEŃ W WARRIORS
 def permutation(population_count, num_of_cities):
@@ -59,8 +65,8 @@ def create_matrix(num_of_cities):
 
 # STARTER PACK
 effectiveness = 0.8
-cities_count = 50
-population_count = 15
+cities_count = 100
+population_count = 16
 matrix, cities_coordinates, dim = create_matrix(cities_count)
 population = permutation(population_count, cities_count)
 population_fitness = [fitness(population[i], matrix) for i in range(population_count)]             # distances of genotypes
@@ -138,5 +144,5 @@ print("best route:", chosen_gen)
 print("time:", timer_end - timer_start)
 print("==============================================")
 
-draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
-draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")
+#draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
+#draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")

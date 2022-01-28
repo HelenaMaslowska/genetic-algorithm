@@ -2,7 +2,6 @@ from graphics import *
 
 def draw(cities, genes, dim, title):
     ratio = round(700/dim, 3)
-    print(ratio)
     win = GraphWin(title, 700, 700)
     win.setCoords(0,0,700,700)
 
