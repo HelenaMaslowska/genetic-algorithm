@@ -160,7 +160,7 @@ while new_max <= effectiveness * best_fitness:
 
 timer_end = time.time()
 
-#plot.plot(iterations)
+#plot(iterations)
 print("==============================================")
 print("with ", round(old_max/best_fitness*100, 2), "% effectiveness", sep="")
 print("best fitness:", old_max)
@@ -170,4 +170,4 @@ print("time:", timer_end - timer_start)
 print("==============================================")
 
 draw_route.draw(cities_coordinates, best_genes, dim, "Best route")
-#draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")
+draw_route.draw(cities_coordinates, chosen_gen, dim, "Found route")

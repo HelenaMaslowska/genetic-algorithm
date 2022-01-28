@@ -1,8 +1,5 @@
 from itertools import permutations
 
-import main
-
-
 def brute_force(matrix):
     ran = len(matrix)
     starting_city = (0,)
@@ -11,7 +8,10 @@ def brute_force(matrix):
     mini = 0
     for i in list(perm):
         new = list(starting_city + i)
-        test = main.distance(new, matrix)
+        test = 0
+        for j in range(len(new) - 1):
+            test += matrix[new[j]][new[j+1]]
+        test += matrix[new[-1]][new[0]]
         if mini == 0 or test < mini:
             mini = test
             mini_genes = new

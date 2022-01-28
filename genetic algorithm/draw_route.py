@@ -3,13 +3,17 @@ from graphics import *
 def draw(cities, genes, dim, title):
     ratio = round(700/dim, 3)
     win = GraphWin(title, 700, 700)
-    win.setCoords(0,0,700,700)
+    win.setCoords(-20,-20,720,720)
+    win.setBackground('white')
 
     for i in range(len(cities)):
         x = ratio*cities[i][0]
         y = ratio*cities[i][1]
-        cir = Circle(Point(x, y), 5)
-        cir.setFill('green')
+        cir = Circle(Point(x, y), 7)
+        if i == 0:
+            cir.setFill('red')
+        else:
+            cir.setFill('green')
         cir.draw(win)
 
     for i in range(len(genes) - 1):
