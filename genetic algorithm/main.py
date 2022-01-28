@@ -18,6 +18,12 @@ def plot(Y):
 
 # PERMUTACJA BEZ POWTÓRZEŃ W WARRIORS
 def permutation(population_count, num_of_cities):
+    """
+    Create list of sublists which have unique permutations
+    :param population_count: number of permutations
+    :param num_of_cities: number of cities as the name suggests
+    :return: these unique permutations
+    """
     m = 0
     warrior_s = []
     while m < population_count:
@@ -29,6 +35,12 @@ def permutation(population_count, num_of_cities):
 
 # FUNKCJA PRZYSTOSOWANIA
 def distance(genes, matrix):
+    """
+    Calculate how long is the whole route
+    :param genes: route
+    :param matrix: input data distances between all cities
+    :return: length of route
+    """
     fit = 0
     for i in range(len(genes) - 1):
         fit += matrix[genes[i]][genes[i + 1]]
@@ -40,6 +52,11 @@ def fitness(genes, matrix):
     return 10000000/fit
 
 def create_matrix(num_of_cities):
+    """
+    Creates new matrix[n][n], n - num_of_cities
+    :param num_of_cities: number of cities
+    :return: list: created matrix, cities coordinates, maximum place where is the city
+    """
     mini = 100
     maxi = 100 * cities_count
     x_y_city = []
@@ -64,7 +81,7 @@ def create_matrix(num_of_cities):
 # ------------------------------------------------------------------------------
 
 # STARTER PACK
-effectiveness = 0.9
+effectiveness = 0.95
 cities_count = 100
 population_count = 8
 matrix, cities_coordinates, dim = create_matrix(cities_count)
@@ -83,7 +100,8 @@ chosen_gen = 0
 new_chosen = 0
 the_lowest_index = 0
 print("Loading...")
-# --------- testowanie brute force i greedy ---------
+
+# --------- tests brute force and greedy ---------
 '''for i in range(100):
     matrix = create_matrix(cities_count)
     best_genes = brute_force.brute_force(matrix)
@@ -98,7 +116,6 @@ print("best: ", best_genes, best_fitness)
 print("good: ", good_genes, good_fitness)'''
 # --------------------------------------------------
 
-#for _ in range(40):
 timer_start = time.time()
 temp_start_timer = time.time()
 while new_max <= effectiveness * best_fitness:

@@ -77,6 +77,11 @@ def fix_numbers_in_two_genotypes(gen1, gen2, map_list, start, end):
     return [gen1, gen2]
 """
 def PMX_algoritm_resolver(genotypes):
+    """
+    PMX - cut fragment of one list and swap with another list, then fill mistakes
+    :param genotypes: 2 sublists of routes
+    :return: upgraded these 2 sublists
+    """
     genotype1 = genotypes[0][2]
     genotype2 = genotypes[1][2]
 

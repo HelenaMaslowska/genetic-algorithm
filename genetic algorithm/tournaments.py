@@ -1,7 +1,15 @@
 import random
 
-# TURNIEJ
 def tournament(num_of_cities, genes, n, leng):
+    """
+    TOURNAMENT 1
+    Started with this method but it's useless for the rest of program
+    :param num_of_cities: number of cities
+    :param genes: fitness list
+    :param n: idk
+    :param leng: idk
+    :return: max of list
+    """
     winners = []
     while len(winners) < n:
         tmp = []
@@ -14,12 +22,14 @@ def tournament(num_of_cities, genes, n, leng):
     return winners
 
 
-# TURNIEJ 2
-# zwraca 2 wektory o największej wartości [index genu, funkcja przystosowania, ścieżka]
 def tournament2(genes, genes_path):
-    #wersja 2 algorytmu
-    #length = len(genes_path) ---------- można obliczyć raz i zastąpić
-    cp_genes_path = genes_path
+    """
+    TOURNAMENT 2
+    Choose the best of two genes - fitnesses
+    :param genes: input list of fitness
+    :param genes_path: input list of routes
+    :return: two vectors in one list
+    """
     tab = [random.randint(0, 1) for _ in range(len(genes_path))]
     while not (len(genes_path) // 3 < sum(tab) < len(genes_path) //3 * 2):
         tab = [random.randint(0, 1) for _ in range(len(genes_path))]
@@ -31,24 +41,22 @@ def tournament2(genes, genes_path):
         else:
             max2 = max(max2, genes[i])
 
-    winners = [[0,0,0], [0,0,0]]
-    winners[0][0] = genes.index(max1)
-    winners[0][1] = max1
-    winners[0][2] = genes_path[genes.index(max1)]
-    winners[1][0] = genes.index(max2)
-    winners[1][1] = max2
-    winners[1][2] = genes_path[genes.index(max2)]
-    return winners
+    return [ [genes.index(max1), max1, genes_path[genes.index(max1)]],
+             [genes.index(max2),max2,genes_path[genes.index(max2)]]  ]
+
 
 def tournament3(population_fitness, population):
-    # losuje polowe zbioru do jednej listy, reszta do drugiej, wybiera max z obu
-    # zwraca w postaci takiej jak tournament 2
-    # wersja 3 algorytmu
-    # naprawić błąd - po wielu iteracjach znacznie
+    """
+    TOURNAMENT 3
+    Cut one list into half choosing indexes randomly
+    :param population_fitness: input list of fitness
+    :param population: input list of routes
+    :return: two vectors in one list
+    """
+
     random_i_list = random.sample(population_fitness, len(population)//2)
     reverso_random_i_list = [x for x in population_fitness if x not in random_i_list]
     max1 = max(random_i_list)
-
 
     max2 = population_fitness[0]
     i=0
@@ -58,11 +66,8 @@ def tournament3(population_fitness, population):
         while i < len(population_fitness) and population_fitness[i] == max1:
             max2 = population_fitness[i]
             i += 1
-            # w tym miejscu jest po czasie coraz czesciej, najpewniej przez to że wartości zaczynają się powtarzać
-
 
     id = population_fitness.index(max1)
     reverso_id = population_fitness.index(max2)
 
-    return [    [id,            max1, population[id]            ],
-                [reverso_id,    max2, population[reverso_id]    ]   ]
+    return [  [id, max1, population[id]],  [reverso_id, max2, population[reverso_id]]  ]
